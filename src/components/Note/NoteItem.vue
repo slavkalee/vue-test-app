@@ -34,18 +34,9 @@ export default {
     ...mapMutations(["removeNote"]),
   },
   props: {
-    id: {
-      type: Number,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-    todos: {
-      type: Array,
-      required: true,
-    },
+    id: Number,
+    title: String,
+    todos: Array,
   },
 };
 </script>

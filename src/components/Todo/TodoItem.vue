@@ -1,15 +1,21 @@
 <template>
-  <li class="todo__item" :class="{completed: completed}">
+  <li class="todo__item" :class="{ completed: completed }">
     <div class="todo__title">
       <input
         type="checkbox"
         :checked="this.completed"
         @change="$emit('toggle', id)"
       />
-      <span>{{ title }}</span>
+      <span v-if="!edited">{{ title }}</span>
+      <input
+        type="text"
+        v-else
+        v-model="newTodoTitle"
+        @keyup.enter="edit(this.id, newTodoTitle)"
+      />
     </div>
     <div class="buttons">
-      <button class="icon--btn">
+      <button class="icon--btn" @click="getEdit">
         <i id="change1" class="material-icons">create</i>
       </button>
       <button class="icon--btn" @click="$emit('remove', id)">
@@ -23,26 +29,26 @@
 export default {
   data() {
     return {
-      test: this.prop
-    }
+      newTodoTitle: this.title,
+      edited: false,
+    };
+  },
+  methods: {
+    getEdit() {
+      this.edited = !this.edited;
+    },
+    edit(id, title) {
+      if (title.trim() !== "") {
+        this.onEdit({ id, title });
+      }
+      this.edited = false;
+    },
   },
   props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    id: {
-      type: Number,
-      required: true,
-    },
-    completed: {
-      type: Boolean,
-      required: true,
-    },
-    prop: {
-      type: String,
-      required: true,
-    }
+    title: String,
+    id: Number,
+    completed: Boolean,
+    onEdit: Function,
   },
 };
 </script>
@@ -58,6 +64,10 @@ export default {
 }
 .todo__item.completed span {
   text-decoration: line-through;
+}
+.todo__title span {
+  color: rgb(121, 119, 119);
+  margin-left: 15px;
 }
 #change1 {
   color: rgb(199, 199, 18);

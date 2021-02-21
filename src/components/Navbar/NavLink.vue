@@ -9,14 +9,8 @@
 <script>
 export default {
   props: {
-    path: {
-      type: String,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
+    path: String,
+    title: String,
   },
 };
 </script>
