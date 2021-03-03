@@ -4,39 +4,50 @@
       <div class="title">{{ title }}</div>
       <div class="buttons">
         <button class="icon--btn">
-          <i id="change" class="material-icons">create</i>
-        </button>
-        <button class="icon--btn" @click="removeNote(id)">
-          <i id="remove" class="material-icons">delete</i>
+          <i id="change" class="material-icons" @click="changeNote(id)"
+            >create</i
+          >
         </button>
       </div>
     </div>
     <ul class="note__todos">
       <NoteTodoItem
-        v-for="t of todos"
+        v-for="t of limitedTodos"
         :key="t.id"
         :id="t.id"
         :title="t.title"
+        :completed="t.completed"
       />
     </ul>
   </li>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
 import NoteTodoItem from "./NoteTodoItem";
 
 export default {
+  data() {
+    return {
+      todosLimit: 2,
+    };
+  },
   components: {
     NoteTodoItem,
   },
   methods: {
-    ...mapMutations(["removeNote"]),
+    changeNote(id) {
+      this.$router.push(`/note/${id}`);
+    },
   },
   props: {
     id: Number,
     title: String,
     todos: Array,
+  },
+  computed: {
+    limitedTodos() {
+      return this.todos.slice(0, this.todosLimit);
+    },
   },
 };
 </script>

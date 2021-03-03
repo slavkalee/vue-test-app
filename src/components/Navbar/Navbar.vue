@@ -1,7 +1,7 @@
 <template>
   <nav>
-    <NavLink path="/" title="List Of Notes" />
-    <NavLink path="/create" title="Create Note" />
+    <NavLink path="/" title="List Of Notes" exact />
+    <NavLink path="/note" title="Note" />
   </nav>
 </template>
 
@@ -19,6 +19,16 @@ nav {
   justify-content: space-around;
   padding-bottom: 8px;
   border-bottom: 1px solid gray;
+  position: relative;
+}
+
+nav::before {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  top: 0;
+  left: 0;
+  background: red;
 }
 
 a {

@@ -1,24 +1,15 @@
 <template>
   <li class="todo__item" :class="{ completed: completed }">
     <div class="todo__title">
-      <input
-        type="checkbox"
-        :checked="this.completed"
-        @change="$emit('toggle', id)"
-      />
+      <input type="checkbox" :checked="this.completed" />
       <span v-if="!edited">{{ title }}</span>
-      <input
-        type="text"
-        v-else
-        v-model="newTodoTitle"
-        @keyup.enter="edit(this.id, newTodoTitle)"
-      />
+      <input type="text" v-else v-model="newTodoTitle" />
     </div>
     <div class="buttons">
-      <button class="icon--btn" @click="getEdit">
+      <button class="icon--btn">
         <i id="change1" class="material-icons">create</i>
       </button>
-      <button class="icon--btn" @click="$emit('remove', id)">
+      <button class="icon--btn">
         <i id="remove" class="material-icons">delete</i>
       </button>
     </div>

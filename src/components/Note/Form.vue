@@ -1,18 +1,18 @@
 <template>
-  <!-- <form> -->
   <div class="addNote--block">
     <label>Note Title:</label>
     <input
       id="note-title"
       type="text"
-      v-model="noteTitle"
+      :value="value"
+      @input="handleChange($event)"
       placeholder="Enter title..."
       ref="input1"
       v-if="noteInputVisible"
       @keyup.enter="addNoteTitle"
     />
     <div class="note-title" v-else>
-      <span>{{ noteTitle }}</span>
+      <span>{{ value }}</span>
       <button @click="changeNoteTitle" class="icon--btn">
         <i id="change" class="material-icons">create</i>
       </button>
@@ -35,30 +35,33 @@
   </div>
 
   <div class="functions">
-    <button class="icon--btn" @click.prevent="onSubmit(noteTitle)">
+    <button class="icon--btn" @click.prevent="submit">
       <i id="save" class="material-icons">note_add</i>
     </button>
-    <button class="icon--btn">
+    <button class="icon--btn" @click="$router.push('/')">
       <i id="cancel" class="material-icons">cancel</i>
     </button>
     <button class="icon--btn">
       <i id="delete" class="material-icons">delete_forever</i>
     </button>
   </div>
-  <!-- </form> -->
 </template>
 
 <script>
 export default {
   data() {
     return {
-      noteTitle: "",
+      noteTitle: this.value,
       newTodoTitle: "",
       noteInputVisible: true,
       todoInputVisible: false,
     };
   },
   methods: {
+    submit() {
+      this.onSubmit(this.noteTitle);
+      this.$router.push("/");
+    },
     show() {
       this.todoInputVisible = true;
       this.$nextTick(() => this.$refs.input2.focus());
@@ -88,8 +91,33 @@ export default {
   props: {
     onAdd: Function,
     onSubmit: Function,
+    handleChange: Function,
+    value: String,
   },
 };
+
+// class NoteNew {
+//   state = {
+//     title: '',
+//     todos: []
+//   }
+// }
+
+// class NoteEdit {
+//   state = {
+//     id: 1
+//     title: 'asdasdas',
+//     todos: []
+//   }
+
+//   addNote() {
+//     if (state.id) {
+//       // edit
+//     } else {
+//       // new
+//     }
+//   }
+// }
 </script>
 
 <style>
@@ -153,6 +181,7 @@ label {
   justify-content: center;
   align-items: center;
 }
+
 .functions {
   padding: 5px 0;
   border-bottom: 1px solid grey;

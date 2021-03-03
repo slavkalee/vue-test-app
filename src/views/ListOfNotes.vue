@@ -5,7 +5,7 @@
       :key="note.id"
       :id="note.id"
       :title="note.title"
-      :todos="note.todos.slice(0, this.limit)"
+      :todos="note.todos"
     />
   </ul>
 </template>
@@ -15,16 +15,11 @@ import { mapGetters } from 'vuex';
 import NoteItem from "../components/Note/NoteItem";
 
 export default {
-  data() {
-    return {
-      limit: 3
-    }
-  },
   components: {
     NoteItem,
   },
   computed: {
-    ...mapGetters(["allNotes"])
+    ...mapGetters(["allNotes"]),
   }
 };
 </script>

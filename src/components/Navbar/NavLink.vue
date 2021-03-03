@@ -1,9 +1,14 @@
 <template>
   <router-link
-    :to="this.path"
-    :class="{ active: this.path === this.$route.path }"
-    >{{ this.title }}</router-link
+    :to="path"
+    :class="{
+      active: exact
+        ? path === this.$route.path
+        : this.$route.path.indexOf(path) > -1,
+    }"
   >
+    {{ title }}
+  </router-link>
 </template>
 
 <script>
@@ -11,6 +16,7 @@ export default {
   props: {
     path: String,
     title: String,
+    exact: Boolean,
   },
 };
 </script>
