@@ -4,12 +4,10 @@
       <div class="title">{{ title }}</div>
       <div class="buttons">
         <button class="icon--btn">
-          <i id="change" class="material-icons" @click="change(id)"
-            >create</i
-          >
+          <i id="change" class="material-icons" @click="change">create</i>
         </button>
         <button class="icon--btn">
-          <i id="remove" class="material-icons" @click="remove(id)"
+          <i id="remove" class="material-icons" @click="remove"
             >delete_forever</i
           >
         </button>
@@ -28,36 +26,44 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { computed, ref } from "vue";
 import NoteTodoItem from "./NoteTodoItem";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 export default {
-  data() {
-    return {
-      todosLimit: 3,
-    };
-  },
   components: {
     NoteTodoItem,
-  },
-  methods: {
-    ...mapMutations(['removeNote']),
-    remove(id) {
-      this.removeNote(id)
-    },
-    change(id) {
-      this.$router.push(`/note/${id}`);
-    },
   },
   props: {
     id: Number,
     title: String,
     todos: Array,
   },
-  computed: {
-    limitedTodos() {
-      return this.todos && this.todos.slice(0, this.todosLimit);
-    },
+  setup(props) {
+    const store = useStore();
+    const router = useRouter();
+
+    const todosLimit = ref(3);
+
+    const limitedTodos = computed(
+      () => props.todos && props.todos.slice(0, todosLimit.value)
+    );
+
+    const remove = () => {
+      const removeNote = () => store.commit("removeNote", props.id);
+      removeNote();
+    };
+
+    const change = () => {
+      router.push(`/note/${props.id}`);
+    };
+
+    return {
+      limitedTodos,
+      remove,
+      change,
+    };
   },
 };
 </script>

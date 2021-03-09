@@ -1,8 +1,8 @@
 <template>
   <Form
-    :value="currentNote.title"
+    :value="note.title"
     :onSubmit="editCurrentNote"
-    :todos="todos"
+    :todos="note.todos"
     :addTodo="addTodo"
     :changeTodo="changeTodo"
     :removeTodo="removeTodo"
@@ -11,69 +11,27 @@
 </template>
  
 <script>
+import { computed } from "vue";
 import Form from "../components/Note/Form";
-import { mapGetters, mapMutations } from "vuex";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+import { useNote } from "../composition/note";
 
 export default {
-  data() {
+  setup() {
+    const store = useStore();
+    const route = useRoute();
+
+    const currentNote = computed(() =>
+      store.getters.getNoteById(route.params.id)
+    );
+
     return {
-      todos: [],
+      ...useNote(currentNote.value.title, currentNote.value.todos),
     };
-  },
-  mounted() {
-    this.todos = [...this.currentNote.todos];
   },
   components: {
     Form,
-  },
-  methods: {
-    ...mapMutations(["editNote"]),
-    editCurrentNote(title) {
-      const id = this.currentNote.id;
-      this.editNote({
-        id,
-        title,
-        todos: this.todos,
-      });
-      this.$router.push("/");
-    },
-    addTodo(title) {
-      if (title) {
-        this.todos.unshift({
-          id: Date.now(),
-          title,
-          completed: false,
-        });
-      }
-    },
-    removeTodo(id) {
-      this.todos = this.todos.filter((todo) => todo.id !== id);
-    },
-    toggleTodo(id) {
-      this.todos = this.todos.map((todo) => {
-        const t = { ...todo };
-        if (+t.id === +id) {
-          t.completed = !t.completed;
-        }
-        return t;
-      });
-    },
-    changeTodo(id, title) {
-      this.todos = this.todos.map((todo) => {
-        const t = { ...todo };
-        if (+id === +t.id) {
-          t.title = title;
-        }
-        return t;
-      });
-    },
-  },
-  computed: {
-    ...mapGetters(["getNoteById"]),
-    currentNote() {
-      const noteId = this.$route.params.id;
-      return this.getNoteById(noteId);
-    },
   },
 };
 </script>

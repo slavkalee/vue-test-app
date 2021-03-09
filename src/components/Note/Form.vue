@@ -4,30 +4,27 @@
     <input
       id="note-title"
       type="text"
-      :value="noteTitle"
-      @input="noteTitle = $event.target.value"
+      :value="form.noteTitle"
+      @input="form.noteTitle = $event.target.value"
       placeholder="Enter title..."
-      ref="input1"
+      ref="noteFocus"
+      autocomplete="off"
     />
   </div>
 
   <div class="addTodo--block">
     <input
       type="text"
-      placeholder="Enter title..."
-      v-model.trim="todoTitle"
-      @keyup.enter="add(todoTitle)"
-      v-if="visible"
-      ref="input2"
+      placeholder="Enter todo title..."
+      v-model.trim="form.todoTitle"
+      @keyup.enter="add(addTodo)"
+      ref="todoFocus"
+      autocomplete="off"
     />
-
-    <button id="addTodo" @click="show" v-else>
-      <i id="add" class="material-icons">add</i> Add New Todo
-    </button>
   </div>
 
   <div class="functions">
-    <button class="icon--btn" @click.prevent="onSubmit(noteTitle)">
+    <button class="icon--btn" @click.prevent="onSubmit(form.noteTitle)">
       <i id="save" class="material-icons">note_add</i>
     </button>
     <button class="icon--btn" @click="$router.push('/')">
@@ -42,7 +39,7 @@
       :title="todo.title"
       :id="todo.id"
       :completed="todo.completed"
-      :onEdit="changeTodo"
+      :edit="changeTodo"
       @remove="removeTodo"
       @toggle="toggleTodo"
     />
@@ -53,36 +50,14 @@
 <script>
 import TodoItem from "../Todo/TodoItem";
 import NoTodos from "../Todo/NoTodos";
+
+import { useForm } from "../../composition/form";
+import { useFocus } from "../../composition/focus";
+
 export default {
   components: {
     TodoItem,
     NoTodos,
-  },
-  data() {
-    return {
-      noteTitle: this.value,
-      todoTitle: "",
-      visible: false,
-    };
-  },
-  mounted() {
-    this.focusInput();
-  },
-  methods: {
-    add(title) {
-      if (title) {
-        this.addTodo(title);
-        this.todoTitle = "";
-        this.visible = false;
-      }
-    },
-    show() {
-      this.visible = true;
-      this.$nextTick(() => this.$refs.input2.focus());
-    },
-    focusInput() {
-      this.$refs.input1.focus();
-    },
   },
   props: {
     value: String,
@@ -92,6 +67,12 @@ export default {
     changeTodo: Function,
     removeTodo: Function,
     toggleTodo: Function,
+  },
+  setup(props) {
+    return {
+      ...useForm(props.value),
+      ...useFocus(),
+    };
   },
 };
 </script>
@@ -122,20 +103,7 @@ label {
   height: 39px;
   font-size: 15px;
 }
-#addTodo {
-  font-family: "Righteous";
-  width: 100%;
-  border: none;
-  padding: 5px 10px;
-  background: rgb(236, 234, 234);
-  border-radius: 5px;
-  text-align: left;
-  color: rgb(121, 119, 119);
-  display: flex;
-  align-items: center;
-  outline: 0;
-  cursor: pointer;
-}
+
 .addTodo--block input {
   font-family: "Righteous";
   width: calc(100% - 20px);
@@ -161,10 +129,6 @@ label {
 .functions {
   padding: 5px 0;
   border-bottom: 1px solid grey;
-}
-#add {
-  color: rgb(207, 173, 22);
-  margin-right: 7px;
 }
 #save {
   color: rgb(29, 177, 29);

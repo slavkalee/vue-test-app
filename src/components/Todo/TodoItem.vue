@@ -11,12 +11,12 @@
         type="text"
         v-else
         v-model="newTodoTitle"
-        @keyup.enter="change(id, newTodoTitle)"
+        @keyup.enter="changeTodo(id, newTodoTitle)"
       />
     </div>
     <div class="buttons">
       <button class="icon--btn">
-        <i id="change1" class="material-icons" @click="getEdit">create</i>
+        <i id="change1" class="material-icons" @click="toggleEdit">create</i>
       </button>
       <button class="icon--btn">
         <i id="remove" class="material-icons" @click="$emit('remove', id)"
@@ -28,27 +28,35 @@
 </template>
 
 <script>
+import { onMounted, ref } from "vue";
 export default {
-  data() {
-    return {
-      newTodoTitle: this.title,
-      edited: false,
+  setup(props) {
+    const newTodoTitle = ref("");
+    const edited = ref(false);
+
+    onMounted(() => {
+      newTodoTitle.value = props.title;
+    });
+
+    const toggleEdit = () => (edited.value = !edited.value);
+
+    const changeTodo = (id, title) => {
+      props.edit(id, title);
+      edited.value = false;
     };
-  },
-  methods: {
-    getEdit() {
-      this.edited = !this.edited;
-    },
-    change(id, title) {
-      this.onEdit(id, title);
-      this.edited = false;
-    }
+
+    return {
+      newTodoTitle,
+      edited,
+      toggleEdit,
+      changeTodo,
+    };
   },
   props: {
     title: String,
     id: Number,
     completed: Boolean,
-    onEdit: Function,
+    edit: Function,
   },
 };
 </script>

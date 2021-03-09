@@ -11,16 +11,22 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { computed } from "vue";
+import { useStore } from "vuex";
+
 import NoteItem from "../components/Note/NoteItem";
 
 export default {
   components: {
     NoteItem,
   },
-  computed: {
-    ...mapGetters(["allNotes"]),
-  }
+  setup() {
+    const store = useStore();
+
+    return {
+      allNotes: computed(() => store.state.notes),
+    };
+  },
 };
 </script>
 
