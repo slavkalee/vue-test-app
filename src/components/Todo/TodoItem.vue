@@ -1,16 +1,27 @@
 <template>
   <li class="todo__item" :class="{ completed: completed }">
     <div class="todo__title">
-      <input type="checkbox" :checked="this.completed" />
+      <input
+        type="checkbox"
+        :checked="this.completed"
+        @input="$emit('toggle', id)"
+      />
       <span v-if="!edited">{{ title }}</span>
-      <input type="text" v-else v-model="newTodoTitle" />
+      <input
+        type="text"
+        v-else
+        v-model="newTodoTitle"
+        @keyup.enter="change(id, newTodoTitle)"
+      />
     </div>
     <div class="buttons">
       <button class="icon--btn">
-        <i id="change1" class="material-icons">create</i>
+        <i id="change1" class="material-icons" @click="getEdit">create</i>
       </button>
       <button class="icon--btn">
-        <i id="remove" class="material-icons">delete</i>
+        <i id="remove" class="material-icons" @click="$emit('remove', id)"
+          >delete</i
+        >
       </button>
     </div>
   </li>
@@ -28,12 +39,10 @@ export default {
     getEdit() {
       this.edited = !this.edited;
     },
-    edit(id, title) {
-      if (title.trim() !== "") {
-        this.onEdit({ id, title });
-      }
+    change(id, title) {
+      this.onEdit(id, title);
       this.edited = false;
-    },
+    }
   },
   props: {
     title: String,

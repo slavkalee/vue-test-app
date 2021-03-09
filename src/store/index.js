@@ -8,7 +8,7 @@ export default createStore({
         title: 'First Note',
         todos: [
           { id: 1, title: 'Vuex', completed: false },
-          { id: 2, title: 'Vuetify', completed: true },
+          { id: 2, title: 'Vuetify', completed: false },
           { id: 3, title: 'VueRouter', completed: false },
         ],
       },
@@ -17,28 +17,28 @@ export default createStore({
         title: 'Second Note',
         todos: [
           { id: 1, title: 'ReactJS', completed: true },
-          { id: 2, title: 'Next.js', completed: false },
+          { id: 2, title: 'Next.js', completed: true },
           { id: 3, title: 'MobX', completed: true },
         ],
       },
     ],
   },
   mutations: {
-    // saveNote(state, title) {
-    //   if (title.trim()) {
-    //     state.notes.unshift({
-    //       id: Date.now(),
-    //       title,
-    //       todos: state.currentNote.todos,
-    //     });
-    //   }
-    // },
-    // removeNote(state, id) {
-    //   state.notes = state.notes.filter((n) => n.id !== id);
-    // },
     addNewNote(state, payload) {
-      state.notes.push(payload)
-    }
+      state.notes.push(payload);
+    },
+    editNote(state, payload) {
+      state.notes = state.notes.map((note) => {
+        if (+note.id === +payload.id) {
+          note.title = payload.title;
+          note.todos = payload.todos;
+        }
+        return note;
+      });
+    },
+    removeNote(state, id) {
+      state.notes = state.notes.filter((note) => +note.id !== +id);
+    },
   },
   getters: {
     allNotes(state) {
@@ -46,5 +46,4 @@ export default createStore({
     },
     getNoteById: (state) => (id) => state.notes.find((n) => n.id === +id),
   },
-  actions: {},
 });

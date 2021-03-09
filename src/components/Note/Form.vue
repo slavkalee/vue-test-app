@@ -4,28 +4,20 @@
     <input
       id="note-title"
       type="text"
-      :value="value"
-      @input="handleChange($event)"
+      :value="noteTitle"
+      @input="noteTitle = $event.target.value"
       placeholder="Enter title..."
       ref="input1"
-      v-if="noteInputVisible"
-      @keyup.enter="addNoteTitle"
     />
-    <div class="note-title" v-else>
-      <span>{{ value }}</span>
-      <button @click="changeNoteTitle" class="icon--btn">
-        <i id="change" class="material-icons">create</i>
-      </button>
-    </div>
   </div>
 
   <div class="addTodo--block">
     <input
       type="text"
       placeholder="Enter title..."
-      v-model="newTodoTitle"
-      @keyup.enter="add"
-      v-if="todoInputVisible"
+      v-model.trim="todoTitle"
+      @keyup.enter="add(todoTitle)"
+      v-if="visible"
       ref="input2"
     />
 
@@ -35,89 +27,73 @@
   </div>
 
   <div class="functions">
-    <button class="icon--btn" @click.prevent="submit">
+    <button class="icon--btn" @click.prevent="onSubmit(noteTitle)">
       <i id="save" class="material-icons">note_add</i>
     </button>
     <button class="icon--btn" @click="$router.push('/')">
       <i id="cancel" class="material-icons">cancel</i>
     </button>
-    <button class="icon--btn">
-      <i id="delete" class="material-icons">delete_forever</i>
-    </button>
   </div>
+
+  <ul class="to-do-list" v-if="todos.length">
+    <TodoItem
+      v-for="todo of todos"
+      :key="todo.id"
+      :title="todo.title"
+      :id="todo.id"
+      :completed="todo.completed"
+      :onEdit="changeTodo"
+      @remove="removeTodo"
+      @toggle="toggleTodo"
+    />
+  </ul>
+  <NoTodos v-else />
 </template>
 
 <script>
+import TodoItem from "../Todo/TodoItem";
+import NoTodos from "../Todo/NoTodos";
 export default {
+  components: {
+    TodoItem,
+    NoTodos,
+  },
   data() {
     return {
       noteTitle: this.value,
-      newTodoTitle: "",
-      noteInputVisible: true,
-      todoInputVisible: false,
+      todoTitle: "",
+      visible: false,
     };
   },
+  mounted() {
+    this.focusInput();
+  },
   methods: {
-    submit() {
-      this.onSubmit(this.noteTitle);
-      this.$router.push("/");
+    add(title) {
+      if (title) {
+        this.addTodo(title);
+        this.todoTitle = "";
+        this.visible = false;
+      }
     },
     show() {
-      this.todoInputVisible = true;
+      this.visible = true;
       this.$nextTick(() => this.$refs.input2.focus());
     },
     focusInput() {
       this.$refs.input1.focus();
     },
-    add() {
-      this.onAdd(this.newTodoTitle);
-      this.newTodoTitle = "";
-      this.todoInputVisible = false;
-    },
-    addNoteTitle() {
-      if (this.noteTitle) {
-        this.noteInputVisible = false;
-      }
-    },
-    changeNoteTitle() {
-      this.noteInputVisible = true;
-
-      this.$nextTick(() => this.$refs.input1.focus());
-    },
-  },
-  mounted() {
-    this.focusInput();
   },
   props: {
-    onAdd: Function,
-    onSubmit: Function,
-    handleChange: Function,
     value: String,
+    onSubmit: Function,
+    todos: Array,
+    addTodo: Function,
+    changeTodo: Function,
+    removeTodo: Function,
+    toggleTodo: Function,
   },
 };
-
-// class NoteNew {
-//   state = {
-//     title: '',
-//     todos: []
-//   }
-// }
-
-// class NoteEdit {
-//   state = {
-//     id: 1
-//     title: 'asdasdas',
-//     todos: []
-//   }
-
-//   addNote() {
-//     if (state.id) {
-//       // edit
-//     } else {
-//       // new
-//     }
-//   }
-// }
 </script>
 
 <style>
@@ -195,8 +171,5 @@ label {
 }
 #cancel {
   color: rgb(231, 209, 8);
-}
-#delete {
-  color: red;
 }
 </style>

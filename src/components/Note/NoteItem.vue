@@ -4,8 +4,13 @@
       <div class="title">{{ title }}</div>
       <div class="buttons">
         <button class="icon--btn">
-          <i id="change" class="material-icons" @click="changeNote(id)"
+          <i id="change" class="material-icons" @click="change(id)"
             >create</i
+          >
+        </button>
+        <button class="icon--btn">
+          <i id="remove" class="material-icons" @click="remove(id)"
+            >delete_forever</i
           >
         </button>
       </div>
@@ -23,19 +28,24 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import NoteTodoItem from "./NoteTodoItem";
 
 export default {
   data() {
     return {
-      todosLimit: 2,
+      todosLimit: 3,
     };
   },
   components: {
     NoteTodoItem,
   },
   methods: {
-    changeNote(id) {
+    ...mapMutations(['removeNote']),
+    remove(id) {
+      this.removeNote(id)
+    },
+    change(id) {
       this.$router.push(`/note/${id}`);
     },
   },
@@ -46,7 +56,7 @@ export default {
   },
   computed: {
     limitedTodos() {
-      return this.todos.slice(0, this.todosLimit);
+      return this.todos && this.todos.slice(0, this.todosLimit);
     },
   },
 };
