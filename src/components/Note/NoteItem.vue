@@ -27,9 +27,10 @@
 
 <script>
 import { computed, ref } from "vue";
-import NoteTodoItem from "./NoteTodoItem";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+
+import NoteTodoItem from "./NoteTodoItem";
 
 export default {
   components: {

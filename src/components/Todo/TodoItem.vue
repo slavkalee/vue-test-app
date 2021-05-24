@@ -1,5 +1,5 @@
 <template>
-  <li class="todo__item" :class="{ completed: completed }">
+  <li class="todo__item" :class="{ completed }">
     <div class="todo__title">
       <input
         type="checkbox"
@@ -41,6 +41,8 @@ export default {
     const toggleEdit = () => (edited.value = !edited.value);
 
     const changeTodo = (id, title) => {
+      if (!title) return;
+
       props.edit(id, title);
       edited.value = false;
     };

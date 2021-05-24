@@ -5,7 +5,7 @@ import { useStore } from 'vuex';
 export function useNote(value, arr = []) {
   const store = useStore();
   const router = useRouter();
-  const route = useRoute()
+  const route = useRoute();
 
   const note = reactive({
     title: value,
@@ -13,41 +13,36 @@ export function useNote(value, arr = []) {
   });
 
   const addNote = (title) => {
-    const newNote = {
+    if (!title) return;
+
+    store.commit('addNewNote', {
       id: Date.now(),
       title,
       todos: note.todos,
-    };
-    
-    const add = () => store.commit("addNewNote", newNote);
-
-    if (title) {
-      add();
-      router.push("/");
-    }
+    });
+    router.push('/');
   };
 
   const editCurrentNote = (title) => {
+    if (!title) return;
     const id = route.params.id;
-    const editNote = {
+
+    store.commit('editNote', {
       id,
       title,
       todos: note.todos,
-    };
-    const edit = () => store.commit("editNote", editNote);
-
-    edit();
-    router.push("/");
+    });
+    router.push('/');
   };
 
   const addTodo = (title) => {
-    if (title) {
-      note.todos.unshift({
-        id: Date.now(),
-        title,
-        completed: false,
-      });
-    }
+    if (!title) return;
+    
+    note.todos.unshift({
+      id: Date.now(),
+      title,
+      completed: false,
+    });
   };
 
   const removeTodo = (id) => {

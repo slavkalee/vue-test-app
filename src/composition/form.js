@@ -7,10 +7,9 @@ export function useForm(value) {
   });
 
   const add = (func) => {
-    if (form.todoTitle) {
-      func(form.todoTitle);
-      form.todoTitle = '';
-    }
+    if (!form.todoTitle) return;
+    func(form.todoTitle);
+    form.todoTitle = '';
   };
 
   return {

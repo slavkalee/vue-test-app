@@ -18,7 +18,6 @@
       placeholder="Enter todo title..."
       v-model.trim="form.todoTitle"
       @keyup.enter="add(addTodo)"
-      ref="todoFocus"
       autocomplete="off"
     />
   </div>
@@ -50,7 +49,6 @@
 <script>
 import TodoItem from "../Todo/TodoItem";
 import NoTodos from "../Todo/NoTodos";
-
 import { useForm } from "../../composition/form";
 import { useFocus } from "../../composition/focus";
 

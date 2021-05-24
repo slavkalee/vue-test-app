@@ -12,10 +12,11 @@
  
 <script>
 import { computed } from "vue";
-import Form from "../components/Note/Form";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+
 import { useNote } from "../composition/note";
+import Form from "../components/Note/Form";
 
 export default {
   setup() {

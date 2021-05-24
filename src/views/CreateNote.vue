@@ -12,7 +12,7 @@
  
 <script>
 import Form from "../components/Note/Form";
-import {useNote} from '../composition/note'
+import { useNote } from "../composition/note";
 
 export default {
   components: {
@@ -20,7 +20,7 @@ export default {
   },
   setup() {
     return {
-      ...useNote(null, [])
+      ...useNote(null, []),
     };
   },
 };
